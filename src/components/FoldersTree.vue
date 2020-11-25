@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     selectActive(folder) {
-      this.$store.dispatch("selectFolder", folder);
+      this.$store.dispatch("selectFolder", folder.id);
     }
   }
 };

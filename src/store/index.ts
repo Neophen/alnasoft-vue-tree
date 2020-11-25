@@ -9,11 +9,17 @@ enum MUTATIONS {
   UPDATE_FOLDERS = "UPDATE_FOLDERS"
 }
 
-const mapFolders = (selectedFolderId, newFolder) => {
+type Folder = {
+  id: number;
+  name: string;
+  children: Array<Folder>;
+};
+
+const mapFolders = (selectedFolderId: number, newFolder: Folder) => {
   let filled = false;
 
-  const mapFolder = folder => {
-    if (folder.id == selectedFolderId) {
+  const mapFolder = (folder: Folder) => {
+    if (folder.id === selectedFolderId) {
       folder.children = [...folder.children, newFolder];
       filled = true;
     }
@@ -23,7 +29,8 @@ const mapFolders = (selectedFolderId, newFolder) => {
 
     return folder;
   };
-  return folder => {
+
+  return (folder: Folder) => {
     if (filled) {
       return folder;
     }
@@ -86,15 +93,13 @@ export default new Vuex.Store({
     [MUTATIONS.UPDATE_FOLDERS](state, folders) {
       state.folders = folders;
     },
-    [MUTATIONS.SELECT_FOLDER](state, folder) {
-      if (state.selectedFolderId == folder.id) {
-        console.log("unselecting");
+    [MUTATIONS.SELECT_FOLDER](state, folderId) {
+      if (state.selectedFolderId === folderId) {
         state.selectedFolderId = null;
         return;
       }
 
-      console.log("selecting");
-      state.selectedFolderId = folder.id;
+      state.selectedFolderId = folderId;
     },
     [MUTATIONS.ADD_FOLDER](state, name) {
       const selectedFolderId = state.selectedFolderId;
@@ -107,7 +112,7 @@ export default new Vuex.Store({
         children: []
       };
 
-      if (selectedFolderId == null) {
+      if (!selectedFolderId) {
         state.folders = [...state.folders, newFolder];
         return;
       }
@@ -121,8 +126,8 @@ export default new Vuex.Store({
     updateFolders(context, folders) {
       context.commit(MUTATIONS.UPDATE_FOLDERS, folders);
     },
-    selectFolder(context, folder) {
-      context.commit(MUTATIONS.SELECT_FOLDER, folder);
+    selectFolder(context, folderId) {
+      context.commit(MUTATIONS.SELECT_FOLDER, folderId);
     },
     addFolder(context, name) {
       context.commit(MUTATIONS.ADD_FOLDER, name);
