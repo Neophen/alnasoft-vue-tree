@@ -3,7 +3,7 @@
     <v-app id="inspire">
       <v-container>
         <v-row class="space-x-4">
-          <v-col cols="1">
+          <v-col cols="2">
             <AddFolderBtn />
           </v-col>
           <v-col cols="1">

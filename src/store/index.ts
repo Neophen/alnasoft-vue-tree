@@ -5,8 +5,10 @@ Vue.use(Vuex);
 
 enum MUTATIONS {
   SELECT_FOLDER = "SELECT_FOLDER",
-  ADD_FOLDER = "ADD_FOLDER"
+  ADD_FOLDER = "ADD_FOLDER",
+  UPDATE_FOLDERS = "UPDATE_FOLDERS"
 }
+
 const mapFolders = (selectedFolderId, newFolder) => {
   let filled = false;
 
@@ -81,8 +83,18 @@ export default new Vuex.Store({
     selectedFolderId: null
   },
   mutations: {
-    [MUTATIONS.SELECT_FOLDER](state, folderId) {
-      state.selectedFolderId = folderId;
+    [MUTATIONS.UPDATE_FOLDERS](state, folders) {
+      state.folders = folders;
+    },
+    [MUTATIONS.SELECT_FOLDER](state, folder) {
+      if (state.selectedFolderId == folder.id) {
+        console.log("unselecting");
+        state.selectedFolderId = null;
+        return;
+      }
+
+      console.log("selecting");
+      state.selectedFolderId = folder.id;
     },
     [MUTATIONS.ADD_FOLDER](state, name) {
       const selectedFolderId = state.selectedFolderId;
@@ -106,6 +118,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    updateFolders(context, folders) {
+      context.commit(MUTATIONS.UPDATE_FOLDERS, folders);
+    },
     selectFolder(context, folder) {
       context.commit(MUTATIONS.SELECT_FOLDER, folder);
     },

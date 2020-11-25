@@ -1,24 +1,30 @@
 <template>
-  <v-treeview
-    :items="folders"
+  <VuetifyDraggableTreeview
+    v-model="folders"
+    group="folders"
     activatable
     hoverable
-    @update:active="selectActive"
   >
-    <template v-slot:prepend="{ open }">
-      <v-icon>
-        {{ open ? "mdi-folder-open" : "mdi-folder" }}
-      </v-icon>
+    <template v-slot:label="{ item }">
+      <button
+        type="button"
+        :class="isSelected(item) ? 'font-weight-black' : 'font-weight-regular'"
+        @click="selectActive(item)"
+      >
+        {{ item.name }}
+      </button>
     </template>
-  </v-treeview>
+  </VuetifyDraggableTreeview>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { mapState } from "vuex";
+<script>
+import VuetifyDraggableTreeview from "vuetify-draggable-treeview";
 
-export default Vue.extend({
+export default {
   name: "FoldersTree",
+  components: {
+    VuetifyDraggableTreeview
+  },
   computed: {
     folders: {
       get() {
@@ -27,12 +33,17 @@ export default Vue.extend({
       set(value) {
         this.$store.dispatch("updateFolders", value);
       }
+    },
+    isSelected() {
+      return folder => {
+        return this.$store.state.selectedFolderId === folder.id;
+      };
     }
   },
   methods: {
-    selectActive(folders: string[]) {
-      this.$store.dispatch("selectFolder", folders[0] || null);
+    selectActive(folder) {
+      this.$store.dispatch("selectFolder", folder);
     }
   }
-});
+};
 </script>

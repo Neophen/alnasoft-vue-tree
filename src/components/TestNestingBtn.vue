@@ -17,6 +17,8 @@ export default Vue.extend({
         this.$store.dispatch("selectFolder", this.currentId);
         this.$store.dispatch("addFolder", `Folder ${this.currentId + 1}`);
       }
+
+      this.$store.dispatch("selectFolder", null);
     }
   }
 });
